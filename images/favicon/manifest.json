@@ -2,8 +2,8 @@
  "name": "mrbraden.github.io",
  "icons": [
   {
-   "src": "/images/favicon/android-icon-36x36.png",
-   "sizes": "36x36",
+   "src": "/home/braden/Work/Website/personal-site/public/images/favicon/favicon.ico",
+   "sizes": "48x48",
    "type": "image/png",
    "density": "0.75"
   }
