@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        :root {
+            --accent-color: #FF4D4D;
+        }
+    </style>
+
+    
+    
+    
+    
+    
+    
+
+    
+    <title>The Computational Graph of a Dot Product</title>
+    <meta name="description" content="A place where I look to dump my thoughts">
+    <meta name="keywords" content='blog, gokarna, hugo, post'>
+
+    <meta property="og:url" content="https://mrbraden56.github.io/posts/comp_graph_dot_product/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="The Computational Graph of a Dot Product">
+    <meta property="og:description" content="A place where I look to dump my thoughts">
+    <meta property="og:image" content="">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Computational Graph of a Dot Product">
+    <meta name="twitter:description" content="A place where I look to dump my thoughts">
+    <meta property="twitter:domain" content="https://mrbraden56.github.io/posts/comp_graph_dot_product/">
+    <meta property="twitter:url" content="https://mrbraden56.github.io/posts/comp_graph_dot_product/">
+    <meta name="twitter:image" content="">
+
+    
+    <link rel="canonical" href="https://mrbraden56.github.io/posts/comp_graph_dot_product/" />
+
+    <link rel="stylesheet" type="text/css" href="https://mrbraden56.github.io//css/normalize.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" type="text/css" href="https://mrbraden56.github.io//css/main.css">
+    <link disabled id="dark-theme" rel="stylesheet" href="https://mrbraden56.github.io//css/dark.css">
+
+    <script src="https://mrbraden56.github.io//js/svg-injector.min.js"></script>
+    <script src="https://mrbraden56.github.io//js/feather-icons.min.js"></script>
+    <script src="https://mrbraden56.github.io//js/main.js"></script>
+
+    
+    
+        <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" integrity="sha384-Xi8rHCmBmhbuyyhbI88391ZKP2dmfnOl4rT9ZfRI7mLTdk1wblIUnrIq35nqwEvC" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js" integrity="sha384-X/XCfMm41VSsqRNQgDerQczD69XqmjOOOwYQvr/uuC+j4OPoNhVgjdGFwhvN02Ja" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : false
+        });
+      });
+    </script>
+  
+    
+</head>
+<body>
+        <script type="text/javascript">
+            
+            setThemeByUserPref();
+        </script><header class="header">
+    <nav class="header-nav">
+
+        
+
+        <div class="nav-title">
+            <a class="nav-brand" href="https://mrbraden56.github.io/">Braden Lockwood</a>
+        </div>
+
+        <div class="nav-links">
+            
+            <div class="nav-link">
+                <a href="https://mrbraden56.github.io/"><span data-feather='home'></span> Home </a>
+            </div>
+            
+            <div class="nav-link">
+                <a href="https://mrbraden56.github.io/posts/"><span data-feather='book'></span> Posts </a>
+            </div>
+            
+            <div class="nav-link">
+                <a href="https://github.com/mrbraden56"><span data-feather='github'></span>  </a>
+            </div>
+            
+
+            <span class="nav-icons-divider"></span>
+            <div class="nav-link dark-theme-toggle">
+                <span id="dark-theme-toggle-screen-reader-target" class="sr-only"></span>
+                <a>
+                    <span id="theme-toggle-icon" data-feather="moon"></span>
+                </a>
+            </div>
+
+            <div class="nav-link" id="hamburger-menu-toggle">
+                <span id="hamburger-menu-toggle-screen-reader-target" class="sr-only">menu</span>
+                <a>
+                    <span data-feather="menu"></span>
+                </a>
+            </div>
+
+            
+            <ul class="nav-hamburger-list visibility-hidden">
+                
+                <li class="nav-item">
+                    <a href="https://mrbraden56.github.io/"><span data-feather='home'></span> Home </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="https://mrbraden56.github.io/posts/"><span data-feather='book'></span> Posts </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="https://github.com/mrbraden56"><span data-feather='github'></span>  </a>
+                </li>
+                
+                <li class="nav-item dark-theme-toggle">
+                    <span id="dark-theme-toggle-screen-reader-target" class="sr-only">theme</span>
+                    <a>
+                        <span id="theme-toggle-icon" data-feather="moon"></span>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+</header>
+<main id="content">
+    <div class="post container">
+    <div class="post-header-section">
+        <h1>The Computational Graph of a Dot Product</h1>
+        <small role="doc-subtitle"></small>
+        <p class="post-date">
+            December 24, 2022
+        </p>
+
+        <ul class="post-tags">
+        
+        </ul>
+    </div>
+
+    <div class="post-content">
+        <p>
+            <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link href="../comp_graph_dot_product.css" rel="stylesheet">
+<p>For about two years now I have been applying deep learning to medical applications such as hearing aids. During this time I used PyTorch to build neural networks and learned all about the fundamentals of building and training a NN. My confidence was at an all-time high in my ability in this field, but then I came to a realization, I had no idea what PyTorch was doing under the hood.</p>
+<p>I knew the basics of the math behind NN. Dot products, derivatives, backpropagation, etc. However, what I had no idea about were these terms that I saw floating around the PyTorch community such as autograd and computational graphs. What the heck does autograd even mean, does it relate to graduating something? I wanted to learn and understand these terms and I knew there was no other place to start except with the person himself.</p>
+<div id="container">
+    <figure>
+        <img src="../comp_graph_dot_product_imgs/karpathy.jpg" alt="drawing"/>
+        <figcaption>Our beloved educator</figcaption>
+        <!-- Simplify, Focus on the problem,  Talk about the results-->
+    </figure>
+</div>
+<p>Former director of AI and autopilot vision at Tesla Andrej Karpathy has put out great educational content on youtube. The most valuable one, in my opinion, is his walk-through video of micrograd, an ML framework he wrote. During this walkthrough, while I don&rsquo;t know if he says the terms &lsquo;autograd&rsquo; and &lsquo;computational graph&rsquo; exactly, he does an excellent job at explaining each.</p>
+<p>Now that I had a good grasp of what these meant, I wanted to try to develop my version of micrograd called slimgrad. I wanted slimgrad to be different from micrograd in that I wanted it to have matrix operations as well. The reason for this is that I find it easier to conceptualize NN&rsquo;s using matrices. Then I ran into the question, how the heck do you represent matrix operations, specifically dot products, in the form of a computational graph?</p>
+<h2 id="what-even-is-a-computational-graph">What even is a computational graph?</h2>
+<p>Before I dive into the question I asked above I want to take a moment to explain what even a computational graph is. All a computational graph does is show us a mathematical expression in the form of a directed graph. Being in the form of a directed graph helps us in understanding the flow of how it operates. Take a look at this example.</p>
+<div id="container">
+    <figure>
+        <img src="../comp_graph_dot_product_imgs/comp_graph.gif" alt="drawing"/>
+    </figure>
+</div>
+<p>Here we can see the operation $5+4=9$ in the form of a computational graph where $5$, $4$, $+$, and $9$ are all represented as nodes. This is just a basic example but any mathematical operation can be depicted this way. Now that we understand what a computational graph is we are one step closer to understanding the computational graph of a dot product.</p>
+<h2 id="what-is-a-matrix">What is a matrix?</h2>
+<p>Studying computer science in college brought its fair share of matrices. However, just like all other math, I studied for the test and then forgot everything shortly after. It wasn&rsquo;t until I was trying to implement NN&rsquo;s that I needed to have a better understanding of what matrices are.</p>
+<p>At first, I thought they were in a class of their own. You know there is algebra here, calculus over there, and matrices somewhere else. I never thought about how they related to one another. After hours of pulling my hair out, I finally concluded what matrices are. A matrix is a data structure to store values. Matrix operations, such as dot products, instruct us on the order in which we need to perform scalar operations to keep the original structure of the two matrices. Take a look at this illustration.</p>
+<div id="container">
+    <figure>
+        <img src="../comp_graph_dot_product_imgs/dot_product2.gif" alt="drawing"/>
+        <figcaption>Visualization of the dot product</figcaption>
+    </figure>
+</div>
+<p>Here we can see an illustration of the dot product between two matrices. As you can see, the dot product tells us the order in which we need to apply scalar operations. Beyond the order of operations for the dot product, there is no complex math, just addition, and multiplication.</p>
+<h2 id="what-does-this-mean-for-the-computational-graph-of-a-dot-product">What does this mean for the computational graph of a dot product?</h2>
+<p>Now to answer the question the big question of this blog post, what does the computational graph of a dot product look like? After accounting for everything we talked about, it won&rsquo;t look any different than the example we did for the computational graph of $5+4=9$. This is because all the scalar operations that take place within a dot product are addition and multiplication. Take a look at this example.</p>
+<div id="container">
+    <figure>
+        <img src="../comp_graph_dot_product_imgs/comp_graph_dot.gif" alt="drawing"/>
+        <figcaption>Computational graph of the dot product</figcaption>
+    </figure>
+</div>
+<p>As you can see this computational graph is no different than any other one we would do for scalar operations.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Now I am no mathematician, but it seems like at the end of the day fields of math such as matrices, calculus, and others boil down to scalar operations. Knowing this makes it easier to build computational graphs not only for matrices, but for all branches of mathematics!</p>
+
+        </p>
+    </div>
+</div>
+
+
+
+    
+
+        </main><footer class="footer">
+    <span>
+        Made with &#10084;&#65039; using <a target="_blank" href="https://github.com/526avijitgupta/gokarna">Gokarna</a>
+    </span>
+</footer>
+</body>
+</html>

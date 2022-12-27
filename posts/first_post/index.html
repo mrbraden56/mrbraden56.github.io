@@ -17,18 +17,18 @@
     
 
     
-    <title>SudoRm-Rf</title>
+    <title>Sudo Rm -Rf</title>
     <meta name="description" content="Blog and Projects!">
     <meta name="keywords" content='blog, gokarna, hugo, post'>
 
     <meta property="og:url" content="https://mrbraden56.github.io/posts/first_post/">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="SudoRm-Rf">
+    <meta property="og:title" content="Sudo Rm -Rf">
     <meta property="og:description" content="Blog and Projects!">
     <meta property="og:image" content="">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="SudoRm-Rf">
+    <meta name="twitter:title" content="Sudo Rm -Rf">
     <meta name="twitter:description" content="Blog and Projects!">
     <meta property="twitter:domain" content="https://mrbraden56.github.io/posts/first_post/">
     <meta property="twitter:url" content="https://mrbraden56.github.io/posts/first_post/">
@@ -148,7 +148,7 @@
 <main id="content">
     <div class="post container">
     <div class="post-header-section">
-        <h1>SudoRm-Rf</h1>
+        <h1>Sudo Rm -Rf</h1>
         <small role="doc-subtitle"></small>
         <p class="post-date">
             September 30, 2022
@@ -161,8 +161,70 @@
 
     <div class="post-content">
         <p>
-            <h1 id="hello-world">Hello World!</h1>
-<p>This is my blog. test</p>
+            <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link href="../first_post.css" rel="stylesheet">
+<div id="container">
+    <figure>
+        <img src="../first_post_images/arch.png" alt="drawing"/>
+        <figcaption>Architecture of Sudo Rm -Rf</figcaption>
+        <!-- Simplify, Focus on the problem,  Talk about the results-->
+    </figure>
+</div>
+<p>Starbucks is a great place to study, but a terrible place for conversation. Trying to understand what someone is saying on top of all the other conversations going on is a daunting task. There is a name for this called the &ldquo;cocktail party problem&rdquo;. This is when the brain has trouble trouble understanding individual audio from a mixture of audio in the environment. This is what the paper, <em>Compute and memory efficient universal sound source seperation</em> by <em>Efthymios Tzinis</em> tries to solve by proposing a deep learning architecture called SUccessive DOwnsampling and Resampling of Multi-Resolution Features(SuDoRM-RF). In this post we will walk through the implementation.</p>
+<h1 id="encoder">Encoder</h1>
+<div class="EncoderPicture">
+    <figure>
+        <img src="../first_post_images/Encoder_Block.png" alt="drawing"/>
+        <figcaption>Encoder Block</figcaption>
+        <!-- Simplify, Focus on the problem,  Talk about the results-->
+    </figure>
+</div>
+We will first start in the encoder block of the architecture. The input to the encoder block is the audio signal in the time domain. For example, this audio signal could be your friend talking mixed with the background noise at starbucks. The input has the shape $x\in\mathbb{R}^T$ and the output from the encoder has the shape $\mathcal{E}(x)\in\mathbb{R}^{C_e\times L}$. For demonstration our input will have the shape $(2,1,32079)$ meaning that our input has two mixed audio sources with 32079 time samples. The output from the encoder will be $(2,512,3206)$ where 2 is still the audio sources, 512 is the number of kernels from the convolution operation and 3206 is the length of those kernels. Lest take a look at this implemented in Python using PyTorch.
+<p>$C_\epsilon=Filters$<br>
+$K_\epsilon=Kernel\space Size$</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Encoder</span>(nn<span style="color:#f92672">.</span>Module):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    This class deinfes the encoder block of the SudoRmRf
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, kernel_size, stride_size, output_channels) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        :param kernel_size: kernel size -&gt; Default : 21
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        :param stride_size: stride size -&gt; Default : 21//2
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        :param output_channels: output channels -&gt; Default : 512
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>__init__()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>conv1d<span style="color:#f92672">=</span>nn<span style="color:#f92672">.</span>Conv1d(in_channels<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>                              out_channels<span style="color:#f92672">=</span>output_channels,
+</span></span><span style="display:flex;"><span>                              kernel_size<span style="color:#f92672">=</span>kernel_size,
+</span></span><span style="display:flex;"><span>                              stride<span style="color:#f92672">=</span>stride_size)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>relu<span style="color:#f92672">=</span>nn<span style="color:#f92672">.</span>ReLU()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">forward</span>(self, input):
+</span></span><span style="display:flex;"><span>        conv1d<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>conv1d(input)
+</span></span><span style="display:flex;"><span>        non_negative<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>relu(conv1d)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> non_negative
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dummy_input <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>rand(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">32079</span>)
+</span></span><span style="display:flex;"><span>encoder<span style="color:#f92672">=</span>Encoder(kernel_size<span style="color:#f92672">=</span><span style="color:#ae81ff">21</span>,
+</span></span><span style="display:flex;"><span>                stride_size<span style="color:#f92672">=</span><span style="color:#ae81ff">21</span><span style="color:#f92672">//</span><span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>                output_channels<span style="color:#f92672">=</span><span style="color:#ae81ff">512</span>)
+</span></span><span style="display:flex;"><span>output <span style="color:#f92672">=</span> encoder<span style="color:#f92672">.</span>forward(dummy_input)
+</span></span><span style="display:flex;"><span>print(output<span style="color:#f92672">.</span>shape)
+</span></span></code></pre></div><p>Output:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>torch<span style="color:#f92672">.</span>Size([<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">512</span>, <span style="color:#ae81ff">3206</span>])
+</span></span></code></pre></div><h3 id="what-is-the-purpose-of-the-encoder">What is the purpose of the Encoder?</h3>
+<p>We need to think about the goal of this architecture, which is speech enhancement. Speech enhancement aims to improve speech quality whether that be speech quality or removing unwanted noise. If we know this then we would realize that the autoencoder(AE) is perfect for this scenario. An AE is similar to PCA in that it compresses the input to a latent space which contains the most important features. In our case, the most important features being speech quality and removing noise. The AE aids us in accomplishing these two things.</p>
+<p>The 1d convolution is what gets us to that latent space. You can see our size go from the normal representation of $(2,1,32079)$ to the latent representation $(2,512,3206)$. We use convolutions instead of fully connected layers because convolutions greatly reduce the model size and we want to run in real time. The reason we use a 1d convolution is so that can preserve the spatial structure of the time-series data, that being noisy audio.</p>
+<h1 id="separator">Separator</h1>
+<div class="EncoderPicture">
+    <figure>
+        <img src="../first_post_images/Seperator_block.png" alt="drawing"/>
+        <figcaption>Separator Block</figcaption>
+        <!-- Simplify, Focus on the problem,  Talk about the results-->
+    </figure>
+</div>
+The separator takes the input from the encoder, in our case this has the shape $(2,512,3206)$. However, before we even enter the separator we clone the encoded mixture. We clone the encoded mixture because it will be multiplied element-wise with the estimated masks from the separtor. More on the masks later.
+<p>Once in the separator we go through a pointwise convolution and then a layer normalizaiton. Remeber, the data in which we are using is audio, which is sequence data. This is why these two operations are chosen. Layer normilization works well with sequence data because it normalizes per layer and not per batch. Since it does not normalize per batch, it does not introduce any new dependencies across inputs. POINTWISE DIMENSIONALITY</p>
 
         </p>
     </div>
